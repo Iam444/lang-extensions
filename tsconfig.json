@@ -3,13 +3,15 @@
   "compilerOptions": {
     "target": "ES2024",
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "nodenext",
 
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
     "rootDir": "./src",
     "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+
 
     "strict": true,
     "alwaysStrict": true,

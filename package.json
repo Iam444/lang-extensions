@@ -6,9 +6,40 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js"
+    "./entity": {
+      "types": "./dist/entity/index.d.ts",
+      "import": "./dist/entity/index.js"
+    },
+    "./errors": {
+      "types": "./dist/errors/index.d.ts",
+      "import": "./dist/errors/index.js"
+    },
+    "./helpers": {
+      "types": "./dist/helpers/index.d.ts",
+      "import": "./dist/helpers/index.js"
+    },
+    "./identity": {
+      "types": "./dist/identity/index.d.ts",
+      "import": "./dist/identity/index.js"
+    },
+    "./list": {
+      "types": "./dist/list/index.d.ts",
+      "import": "./dist/list/index.js"
+    },
+    "./result": {
+      "types": "./dist/result/index.d.ts",
+      "import": "./dist/result/index.js"
+    },
+    "./uuid": {
+      "types": "./dist/uuid/index.d.ts",
+      "import": "./dist/uuid/index.js"
+    },
+    "./value-object": {
+      "types": "./dist/value-object/index.d.ts",
+      "import": "./dist/value-object/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts"
     }
   },
   "scripts": {

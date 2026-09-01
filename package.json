@@ -1,0 +1,41 @@
+{
+  "name": "lang-extensions",
+  "description": "A bunch of helpful abstractions over native JS/TS capabilities",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "build": "tsc --build"
+  },
+  "author": {
+    "name": "Pavel Kolesnikov",
+    "email": "iam444@mail.ru"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "uuid": "^14.0.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-sonarjs": "^4.2.0",
+    "eslint-plugin-unicorn": "^74.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.57.0"
+  }
+}

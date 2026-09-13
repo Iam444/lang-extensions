@@ -50,7 +50,7 @@ export abstract class Result<TValue, TError extends IBaseError> {
             return this.value;
         }
 
-        throw new FailureUnwrappedException();
+        throw new FailureUnwrappedException(this);
     }
 
     public valueOr<TDefaultValue>(defaultValue: TDefaultValue): TValue | TDefaultValue {
@@ -235,6 +235,10 @@ class Failure<TError extends IBaseError> extends Result<never, TError> {
 export class AsyncResult<TValue, TError extends IBaseError> implements PromiseLike<Result<TValue, TError>> {
     public static of<TValue, TError extends IBaseError>(result: Promise<Result<TValue, TError>>): AsyncResult<TValue, TError> {
         return new AsyncResult(result);
+    }
+
+    public static wrap<TValue, TError extends IBaseError>(action: () => Promise<Result<TValue, TError>>): AsyncResult<TValue, TError> {
+        return new AsyncResult(action());
     }
 
     public static ofSync<TValue, TError extends IBaseError>(result: Result<TValue, TError>): AsyncResult<TValue, TError> {

@@ -6,22 +6,14 @@ interface ISetupOptions {
 }
 
 export class UUIDGenerator {
-    private static generator: ISetupOptions['generator'] | null = v4;
-    private static validator: ISetupOptions['validator'] | null = validate;
+    private static generator: ISetupOptions['generator'] = v4;
+    private static validator: ISetupOptions['validator'] = validate;
 
     public static isValid(uuidString: string): boolean {
-        if (!this.validator) {
-            throw new Error('"UUIDGenerator" is not configured. Use "UUIDGenerator.setup()" in bootstrapping part of your application.');
-        }
-
         return this.validator(uuidString);
     }
 
     public static generate(): string {
-        if (!this.generator) {
-            throw new Error('"UUIDGenerator" is not configured. Use "UUIDGenerator.setup()" in bootstrapping part of your application.');
-        }
-
         return this.generator();
     }
 
@@ -31,7 +23,7 @@ export class UUIDGenerator {
     }
 
     public static reset(): void {
-        this.generator = null;
-        this.validator = null;
+        this.generator = v4;
+        this.validator = validate;
     }
 }

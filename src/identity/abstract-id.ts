@@ -9,7 +9,7 @@ export abstract class AbstractID<TValue extends number | string = number | strin
         return String(this.value);
     }
 
-    protected _getValue(): TValue {
+    public toScalar(): TValue {
         return this.value;
     }
 }

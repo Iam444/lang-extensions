@@ -1,9 +1,10 @@
 import { UUIDGenerator } from '../uuid/index.js';
+import { CorruptedInvariantException } from '../errors/corrupted-invariant.exception.js';
 import { AbstractStringID } from './abstract-string-id.js';
 import type { TConstructor } from '../types/index.js';
 
 export abstract class AbstractUUID extends AbstractStringID {
-    public static create<C extends TConstructor<T>, T extends AbstractUUID = C extends TConstructor<infer T> ? T : never>(this: C): T {
+    public static generate<C extends TConstructor<T>, T extends AbstractUUID = C extends TConstructor<infer T> ? T : never>(this: C): T {
         return new this();
     }
 
@@ -11,11 +12,14 @@ export abstract class AbstractUUID extends AbstractStringID {
         super(id || UUIDGenerator.generate());
     }
 
-    protected override _isValid(): boolean {
-        return typeof this.value === 'string' && UUIDGenerator.isValid(this.value);
-    }
+    protected override validate(): void {
+        super.validate();
 
-    protected override _getInvalidityDescription(): string {
-        return 'The value must be a valid UUID string';
+        if (!UUIDGenerator.isValid(this.value)) {
+            throw new CorruptedInvariantException(`The value must be a valid UUID string. Provided: ${this.value}`, {
+                value: this.value,
+                className: this.constructor.name,
+            });
+        }
     }
 }

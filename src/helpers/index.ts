@@ -1,1 +1,1 @@
-export { ExtendedTypeGuards } from './extended-type-guards.js';
+export { isConstructor, assertDefined } from './type-helpers.js';

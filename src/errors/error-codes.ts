@@ -1,7 +1,7 @@
-const namespace = 'LANG_EXT';
+const CONTEXT = 'LANG_EXT';
 
 export const ErrorCodes = {
-    INVALID_VO: `${namespace}/INVALID_VO`,
-    DUPLICATED_ELEMENT: `${namespace}/DUPLICATED_ELEMENT`,
-    ORDER_OUT_OF_RANGE: `${namespace}/ORDER_OUT_OF_RANGE`,
+    INVALID_VO: `${CONTEXT}.INVALID_VO`,
+    DUPLICATED_ELEMENT: `${CONTEXT}.DUPLICATED_ELEMENT`,
+    INDEX_OUT_OF_RANGE: `${CONTEXT}.INDEX_OUT_OF_RANGE`,
 } as const;

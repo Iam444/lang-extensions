@@ -11,9 +11,6 @@ export abstract class AbstractList<T extends IEquatable<T>> {
         return this._items.length === 0;
     }
 
-    /**
-     * Returns a shallow-copied Array
-     */
     public asArray(): T[] {
         return [...this._items];
     }

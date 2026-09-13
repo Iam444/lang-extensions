@@ -1,8 +1,7 @@
 import { Result } from '../result/index.js';
-import { OrderOutOfRangeError } from '../errors/index.js';
-import { Order } from './order.js';
+import { IndexOutOfRangeError } from '../errors/index.js';
 import { AbstractOrderedList } from './abstract-ordered-list.js';
-import type { IEquatable, IOrderOutOfRangeError } from '../types/index.js';
+import type { IEquatable, IIndexOutOfRangeError } from '../types/index.js';
 
 /**
  * Represents a wrapper of Array with following characteristic:
@@ -22,6 +21,18 @@ export class OrderedList<T extends IEquatable<T>> extends AbstractOrderedList<T>
 
     public add(item: T): void {
         this._items.push(item);
+    }
+
+    public override placeAt(element: T, index: number): Result<void, IIndexOutOfRangeError> {
+        if (!this._isInRange(index)) {
+            return Result.failure(
+                IndexOutOfRangeError.of('Not able to place element. The provided index is out of the list range', index, this.size),
+            );
+        }
+
+        this._items.splice(index, 0, element);
+
+        return Result.success();
     }
 
     public removeFirst(element: T): void {
@@ -46,40 +57,28 @@ export class OrderedList<T extends IEquatable<T>> extends AbstractOrderedList<T>
         this._items.splice(index, 1);
     }
 
-    public placeAt(element: T, position: Order): Result<void, IOrderOutOfRangeError> {
-        if (!this._isInRange(position)) {
-            return Result.failure(OrderOutOfRangeError.of(position.value, this.size));
-        }
-
-        this._items.splice(position.toIndex(), 0, element);
-
-        return Result.success();
-    }
-
     public removeAll(element: T): void {
         this._items = this._items.filter((item) => !item.equals(element));
     }
 
-    public getLastPosition(element: T): Order | null {
+    public getLastPosition(element: T): number | null {
         const entryIndexes = this._getEntryIndexes(element);
 
         if (entryIndexes === null) {
             return null;
         }
 
-        const position = entryIndexes.at(-1)!;
-
-        return new Order(position);
+        return entryIndexes.at(-1)!;
     }
 
-    public getAllPositions(element: T): Order[] | null {
+    public getAllPositions(element: T): number[] | null {
         const entryIndexes = this._getEntryIndexes(element);
 
         if (entryIndexes === null) {
             return null;
         }
 
-        return entryIndexes.map((index) => new Order(index + 1));
+        return entryIndexes;
     }
 
     private _getEntryIndexes(element: T): number[] | null {

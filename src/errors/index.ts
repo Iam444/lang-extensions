@@ -1,6 +1,6 @@
-export { AbstractSystemException } from '../errors/abstract-system-exception.js';
+export { AbstractInternalSystemException } from './abstract-internal-system.exception.js';
 export { FailureUnwrappedException } from './failure-unwrapped-exception.js';
-export { InvalidVOError } from '../errors/invalid-vo.error.js';
-export { DuplicatedElementError } from '../errors/duplicated-element.error.js';
-export { OrderOutOfRangeError } from '../errors/order-out-of-range.error.js';
-export { ErrorCodes } from '../errors/error-codes.js';
+export { CorruptedInvariantException } from './corrupted-invariant.exception.js';
+export { DuplicatedElementError } from './duplicated-element.error.js';
+export { IndexOutOfRangeError } from './index-out-of-range.error.js';
+export { ErrorCodes } from './error-codes.js';

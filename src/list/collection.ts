@@ -11,6 +11,10 @@ import type { IDuplicatedElementError, IEquatable } from '../types/index.js';
  * - Is designed as an UNORDERED list for external usage
  */
 export class Collection<T extends IEquatable<T>> extends AbstractList<T> {
+    public static reconstitute<T extends IEquatable<T>>(elements: T[]): Collection<T> {
+        return new Collection(elements);
+    }
+
     public static of<T extends IEquatable<T>>(elements: T[]): Result<Collection<T>, IDuplicatedElementError<T>> {
         const collection = new Collection<T>([]);
 
@@ -18,7 +22,7 @@ export class Collection<T extends IEquatable<T>> extends AbstractList<T> {
             const origin = collection.find((item) => element.equals(item));
 
             if (origin) {
-                return Result.failure(DuplicatedElementError.of(origin, element));
+                return Result.failure(DuplicatedElementError.of(element));
             }
 
             collection._items.push(element);
@@ -35,7 +39,7 @@ export class Collection<T extends IEquatable<T>> extends AbstractList<T> {
         const origin = this.find((item) => element.equals(item));
 
         if (origin) {
-            return Result.failure(DuplicatedElementError.of(origin, element));
+            return Result.failure(DuplicatedElementError.of(element));
         }
 
         this._items.push(element);
@@ -44,12 +48,6 @@ export class Collection<T extends IEquatable<T>> extends AbstractList<T> {
     }
 
     public remove(element: T): void {
-        const index = this._items.findIndex((item) => item.equals(element));
-
-        if (index === -1) {
-            return;
-        }
-
-        this._items.splice(index, 1);
+        this._items = this._items.filter((item) => !item.equals(element));
     }
 }

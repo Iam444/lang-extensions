@@ -1,8 +1,7 @@
 import { Result } from '../result/index.js';
-import { OrderOutOfRangeError } from '../errors/index.js';
+import { IndexOutOfRangeError } from '../errors/index.js';
 import { AbstractList } from './abstract-list.js';
-import { Order } from './order.js';
-import type { IBaseError, IEquatable, IOrderOutOfRangeError } from '../types/index.js';
+import type { IBaseError, IEquatable, IIndexOutOfRangeError } from '../types/index.js';
 
 export abstract class AbstractOrderedList<T extends IEquatable<T>> extends AbstractList<T> {
     get first(): T | null {
@@ -17,56 +16,71 @@ export abstract class AbstractOrderedList<T extends IEquatable<T>> extends Abstr
         this._items.pop();
     }
 
-    public get(position: Order): Result<T, IOrderOutOfRangeError> {
-        const element = this._items.at(position.toIndex());
+    public get(index: number): T | null {
+        const element = this._items.at(index);
 
-        if (!element) {
-            return Result.failure(OrderOutOfRangeError.of(position.value, this.size));
-        }
-
-        return Result.success(element);
+        return element || null;
     }
 
-    public getPosition(element: T): Order | null {
+    public getIndex(element: T): number | null {
         const index = this._items.findIndex((item) => item.equals(element));
 
-        return index === -1 ? null : new Order(index + 1);
+        return index === -1 ? null : index;
     }
 
-    public removeFrom(position: Order): Result<void, IOrderOutOfRangeError> {
-        if (!this._isInRange(position)) {
-            return Result.failure(OrderOutOfRangeError.of(position.value, this.size));
+    public removeAt(index: number): Result<void, IIndexOutOfRangeError> {
+        if (!this._isInRange(index)) {
+            return Result.failure(
+                IndexOutOfRangeError.of('Not able to remove element. The provided index is out of the list range', index, this.size),
+            );
         }
 
-        this._items.splice(position.toIndex(), 1);
+        this._items.splice(index, 1);
 
         return Result.success();
     }
 
-    public reorder(sourcePosition: Order, targetPosition: Order): Result<void, IOrderOutOfRangeError> {
-        if (sourcePosition.equals(targetPosition)) {
+    public reorder(sourceIndex: number, targetIndex: number): Result<void, IIndexOutOfRangeError> {
+        if (sourceIndex === targetIndex) {
             return Result.success();
         }
 
-        const sourceElement = this._items.at(sourcePosition.toIndex());
+        const sourceElement = this._items.at(sourceIndex);
 
         if (!sourceElement) {
-            return Result.failure(OrderOutOfRangeError.of(sourcePosition.value, this.size));
+            return Result.failure(
+                IndexOutOfRangeError.of('Not able to reorder elements. The source index is out of the list range', sourceIndex, this.size),
+            );
         }
 
-        if (!this._isInRange(targetPosition)) {
-            return Result.failure(OrderOutOfRangeError.of(targetPosition.value, this.size));
+        if (!this._isInRange(targetIndex)) {
+            return Result.failure(
+                IndexOutOfRangeError.of('Not able to reorder elements. The target index is out of the list range', targetIndex, this.size),
+            );
         }
 
-        this._items.splice(sourcePosition.toIndex(), 1);
-        this._items.splice(targetPosition.toIndex(), 0, sourceElement);
+        if (sourceElement)
+            this._items =
+                sourceIndex < targetIndex
+                    ? [
+                          ...this._items.slice(0, sourceIndex),
+                          ...this._items.slice(sourceIndex + 1, targetIndex + 1),
+                          sourceElement,
+                          ...this._items.slice(targetIndex + 1),
+                      ]
+                    : [
+                          ...this._items.slice(0, targetIndex),
+                          sourceElement,
+                          ...this._items.slice(targetIndex, sourceIndex),
+                          ...this._items.slice(sourceIndex + 1),
+                      ];
 
         return Result.success();
     }
 
-    protected _isInRange(position: Order): boolean {
-        return position.value <= this.size;
+    protected _isInRange(index: number): boolean {
+        return index >= 0 && index < this.size;
     }
 
-    public abstract placeAt(element: T, position: Order): Result<void, IBaseError>;
+    public abstract placeAt(element: T, index: number): Result<void, IBaseError>;
 }

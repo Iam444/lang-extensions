@@ -34,16 +34,4 @@ export class List<T extends IEquatable<T>> extends AbstractList<T> {
     public removeAll(element: T): void {
         this._items = this._items.filter((item) => !item.equals(element));
     }
-
-    private _getEntryIndexes(element: T): number[] | null {
-        const entryIndexes: number[] = [];
-
-        for (const [index, item] of this._items.entries()) {
-            if (item.equals(element)) {
-                entryIndexes.push(index);
-            }
-        }
-
-        return entryIndexes.length === 0 ? null : entryIndexes;
-    }
 }

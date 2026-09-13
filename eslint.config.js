@@ -9,7 +9,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 
 export default defineConfig([
-    globalIgnores(['node_modules/**', 'dist/**']),
+    globalIgnores(['node_modules', 'dist']),
 
     eslint.configs.recommended,
     tseslint.configs.recommended,
@@ -86,6 +86,7 @@ export default defineConfig([
             'unicorn/prefer-await': 'off',
             'unicorn/prefer-number-is-safe-integer': 'off',
             'unicorn/prefer-then-catch': 'off',
+            'unicorn/catch-error-name': 'off',
 
             'unicorn/consistent-class-member-order': [
                 'error',

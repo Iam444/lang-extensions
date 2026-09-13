@@ -1,19 +1,15 @@
-import { Result } from '../result/index.js';
-import { InvalidVOError } from '../errors/index.js';
-import type { IEquatable, TConstructor, IInvalidVOError } from '../types/index.js';
+import type { IEquatable, TScalar, TConstructor } from '../types/index.js';
 
 export abstract class AbstractVO implements IEquatable<AbstractVO> {
     public static of<C extends TConstructor<T>, T extends AbstractVO = C extends TConstructor<infer T> ? T : never>(
         this: C,
-        ...arguments_: ConstructorParameters<typeof this>
-    ): Result<T, IInvalidVOError> {
-        const inst = new this(...arguments_);
+        ...args: ConstructorParameters<typeof this>
+    ): T {
+        const instance = new this(...args);
 
-        if (!inst._isValid()) {
-            return Result.failure(inst._getValidationError());
-        }
+        instance.validate();
 
-        return Result.success(inst);
+        return instance;
     }
 
     public equals<T extends AbstractVO>(other: T): boolean {
@@ -21,18 +17,12 @@ export abstract class AbstractVO implements IEquatable<AbstractVO> {
             return false;
         }
 
-        return this.toString() === other.toString();
-    }
-
-    protected _getValidationError(): IInvalidVOError {
-        return InvalidVOError.of(this.constructor as TConstructor<typeof this>, this._getValue(), this._getInvalidityDescription());
+        return this.toScalar() === other.toScalar();
     }
 
     public abstract toString(): string;
 
-    protected abstract _isValid(): boolean;
+    public abstract toScalar(): TScalar;
 
-    protected abstract _getValue(): unknown;
-
-    protected abstract _getInvalidityDescription(): string;
+    protected abstract validate(): void;
 }
